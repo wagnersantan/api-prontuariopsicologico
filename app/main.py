@@ -1,28 +1,58 @@
 from fastapi import FastAPI
-from core.config import settings
+
+# Importando os routers
+#from app.api.v1.routes.pacientes import paciente_routes
+#from app.api.v1.routes.documentos import documento_routes
+#from app.api.v1.routes.usuarios import usuario_routes
+
+# Criando a aplicação FastAPI
+#app = FastAPI(title="API Prontuário Psicológico")
+
+# Incluindo os routers com prefixos e tags
+#app.include_router(paciente_routes, prefix="/pacientes", tags=["Pacientes"])
+#app.include_router(prontuario_routes, prefix="/prontuarios", tags=["Prontuários"])
+#app.include_router(documento_routes, prefix="/documentos", tags=["Documentos"])
+#app.include_router(usuario_routes, prefix="/usuarios", tags=["Usuários"])
+
+
+#from fastapi import FastAPI
+
+#from app.api.v1.routes.pacientes.routes import router as paciente_routes
+#from app.api.v1.routes.prontuarios.routes import router as prontuario_routes
+#from app.api.v1.routes.documentos.routes import router as documento_routes
+#from app.api.v1.routes.usuarios.usuario_routes import router as usuario_routes
+
+#app = FastAPI(title="API Prontuário Psicológico")
+
+#app.include_router(paciente_routes, prefix="/pacientes", tags=["Pacientes"])
+#app.include_router(prontuario_routes, prefix="/prontuarios", tags=["Prontuários"])
+#app.include_router(documento_routes, prefix="/documentos", tags=["Documentos"])
+#app.include_router(usuario_routes, prefix="/usuarios", tags=["Usuários"])
+
+
+from fastapi import FastAPI
+
+# Importando routers
+from app.api.v1.routes.pacientes.routes import router as paciente_routes
+from app.api.v1.routes.prontuarios.routes import router as prontuario_routes
+from app.api.v1.routes.documentos.routes import router as documento_routes
+from app.api.v1.routes.usuarios.usuario_routes import router as usuario_routes
+from app.api.v1.routes.sessoes.routes import router as sessoes_routes
+from app.api.v1.routes.evolucoes.routes import router as evolucao_routes
+
+# Importando função para inicializar o banco
 from core.database import init_db
-from app.api.v1.routes import pacientes, prontuarios
 
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title=settings.PROJECT_NAME,
-        version=settings.VERSION,
-        description=settings.DESCRIPTION,
-        debug=settings.DEBUG
-    )
+# Criando app FastAPI
+app = FastAPI(title="API Prontuário Psicológico")
 
-    # Inicializar banco
-    init_db()
+# Inicializa o banco e cria todas as tabelas
+init_db()
 
-    # 🔹 Rota inicial para teste
-    @app.get("/")
-    def root():
-        return {"message": f"{settings.PROJECT_NAME} está rodando!"}
-
-    # Registrar rotas
-    app.include_router(pacientes.router, prefix="/api/v1/pacientes", tags=["Pacientes"])
-    app.include_router(prontuarios.router, prefix="/api/v1/prontuarios", tags=["Prontuários"])
-
-    return app
-
-app = create_app()
+# Incluindo routers
+app.include_router(paciente_routes)
+app.include_router(prontuario_routes)
+app.include_router(documento_routes)
+app.include_router(usuario_routes)
+app.include_router(sessoes_routes)
+app.include_router(evolucao_routes)

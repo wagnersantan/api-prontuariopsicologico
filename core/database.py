@@ -1,20 +1,36 @@
+# core/database.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from core.config import settings  # corrigido
 
-# Criar engine para SQLite
+SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
+
 engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False}  # Necessário para SQLite no modo local
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False}  # necessário apenas para SQLite
 )
 
-# Criar sessão
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
-# Base para modelos ORM
 Base = declarative_base()
 
-# Função para criar tabelas
 def init_db():
-    from models import paciente, prontuario  # importa modelos diretamente
+    import models.paciente.paciente_model
+    import models.prontuario.prontuario_model
+    import models.sessao.sessao_model
+    import models.evolucao.evolucao_model
+    import models.documento.documento_model
+    import models.usuario.usuario_model
+
     Base.metadata.create_all(bind=engine)
+
+# ✅ Função para injetar a sessão no FastAPI
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

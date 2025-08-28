@@ -112,3 +112,21 @@ Distribuído sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais det
 ---
 
 Desenvolvido por **Wagner Santana**.
+
+{
+  "nome": "Wagner Santana",
+  "cpf": "123.456.789-00",
+  "rg": "MG-12.345.678",
+  "data_nascimento": "1985-08-27",
+  "genero": "Masculino",
+  "email": "wagner.santana@example.com",
+  "telefone": "(31) 99999-0000",
+  "endereco": "Rua Exemplo, 123, Belo Horizonte, MG",
+  "contato_emergencia": "Maria Santana - (31) 98888-0000",
+  "plano_saude": "Unimed",
+  "numero_carteirinha": "000123456",
+  "historico_atendimentos": [],
+  "diagnosticos": ["Ansiedade leve"],
+  "medicamentos": [],
+  "observacoes": "Paciente relata ansiedade leve."
+}
