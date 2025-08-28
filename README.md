@@ -1,118 +1,124 @@
 # API de Prontuário Psicológico
 
-Esta é uma API RESTful desenvolvida com FastAPI para registrar, organizar e consultar prontuários psicológicos de pacientes. A proposta é permitir que psicólogos e profissionais da área tenham uma base estruturada para integração com um aplicativo móvel ou sistema web.
+API RESTful desenvolvida com **FastAPI** para gerenciar prontuários psicológicos: pacientes, sessões, evoluções, documentos e usuários (com autenticação JWT).
 
 ---
 
-## 🔧 Funcionalidades
+## ✨ Principais Recursos
 
-- `POST /pacientes/`: Cadastra um novo paciente.
-- `GET /pacientes/`: Lista todos os pacientes cadastrados.
-- `POST /prontuarios/`: Registra um novo prontuário (sessão) para um paciente.
-- `GET /prontuarios/`: Lista todos os prontuários cadastrados.
+* **Pacientes**: CRUD completo.
+* **Prontuários** (registros de atendimento): CRUD completo.
+* **Sessões**: criação e listagem.
+* **Evoluções**: criação e listagem.
+* **Documentos**: upload/registro e listagem.
+* **Usuários & Autenticação (JWT)**: criação de usuário, login e rota protegida `me`.
+
+> **Versão da API**: v1
+> **Prefixo base**: `/api/v1`
 
 ---
 
 ## 🗂️ Estrutura do Projeto
 
-O projeto está organizado de forma modular para facilitar a manutenção e o crescimento futuro.
-
 ```
 api-prontuariopsicologico/
 ├── app/
-│   ├── __init__.py
-│   ├── rotas/                # Rotas da API
-│   │   ├── pacientes.py      # Endpoints de pacientes
-│   │   └── prontuarios.py    # Endpoints de prontuários
-│   ├── esquemas/             # Pydantic Schemas
-│   │   ├── paciente.py
-│   │   └── prontuario.py
-│   └── principal.py          # Arquivo principal da aplicação
-├── venv/                     # Ambiente virtual Python
-├── requirements.txt          # Dependências do projeto
-└── README.md                 # Documentação
+│   ├── api/
+│   │   └── v1/
+│   │       └── routes/
+│   │           ├── alertas/
+│   │           ├── auth/
+│   │           ├── documentos/
+│   │           ├── evolucoes/
+│   │           ├── pacientes/
+│   │           ├── prontuarios/
+│   │           ├── sessoes/
+│   │           └── usuarios/
+│   └── main.py
+├── core/
+│   ├── config.py
+│   └── database.py
+├── models/
+├── repositories/
+├── schemas/
+├── services/
+├── testes/
+├── utils/
+├── requirements.txt
+├── database.db
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-## ▶️ Como Rodar a Aplicação
+## ▶️ Como Rodar Localmente
 
-### ✅ Requisitos
+### Pré‑requisitos
 
-- Python 3.8+
-- FastAPI
-- Uvicorn
+* Python **3.12+** (ou 3.10+/3.11+ se preferir)
+* Pip e venv
 
 ### Passo a passo
 
-Clone o repositório:
-
 ```bash
+# 1) Clonar o repositório
 git clone https://github.com/wagnersantan/api-prontuariopsicologico.git
 cd api-prontuariopsicologico
-```
 
-Crie um ambiente virtual:
-
-```bash
+# 2) Criar e ativar o ambiente virtual
 python3 -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
-```
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-Instale as dependências:
-
-```bash
+# 3) Instalar dependências
 pip install -r requirements.txt
+
+# 4) Executar o servidor
+uvicorn app.main:app --reload
 ```
 
-Execute o servidor localmente:
+A API ficará disponível em: `http://127.0.0.1:8000`
 
-```bash
-uvicorn app.principal:app --reload
+### Documentação automática
+
+* **Swagger UI**: `http://127.0.0.1:8000/docs`
+* **ReDoc**: `http://127.0.0.1:8000/redoc`
+
+> Se você preferir outro host/porta: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`.
+
+---
+
+## 🔐 Configuração (env)
+
+As configurações básicas ficam em `core/config.py` e o banco em `core/database.py`. Por padrão, usa‑se **SQLite** em `database.db`.
+
+Exemplo de `.env` (opcional, se já estiver embutido no `config.py`):
+
+```
+# Exemplo
+DATABASE_URL=sqlite:///./database.db
+JWT_SECRET=troque-por-um-segredo-forte
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
 ```
 
-A API estará disponível em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
 ---
 
-## 📑 Testando a API
+## 📚 Endpoints (v1)
 
-Use a interface interativa automática gerada pelo FastAPI:
+> Os exemplos abaixo assumem o **prefixo base** `/api/v1`.
 
-- **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+### Pacientes
 
----
+* `POST /pacientes/` – Cadastrar paciente
+* `GET /pacientes/` – Listar pacientes
+* `GET /pacientes/{id}` – Obter paciente por ID
+* `PUT /pacientes/{id}` – Atualizar paciente
+* `DELETE /pacientes/{id}` – Remover paciente
 
-## 🚧 Próximos Passos
+**Exemplo de request (POST /pacientes/):**
 
-- Integração com banco de dados MongoDB Atlas 🌍
-- Implementar autenticação de usuários (JWT)
-- Relatórios e filtros de sessões por paciente
-- Upload de arquivos (como anotações ou registros de voz)
-
----
-
-## 🤝 Contribuição
-
-Sinta-se à vontade para colaborar:
-
-1. Faça um fork do projeto
-2. Crie uma branch (`git checkout -b minha-melhoria`)
-3. Commit suas alterações (`git commit -m 'feat: adicionei nova funcionalidade'`)
-4. Dê um push (`git push origin minha-melhoria`)
-5. Abra um Pull Request
-
----
-
-## ⚖️ Licença
-
-Distribuído sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-Desenvolvido por **Wagner Santana**.
-
+```json
 {
   "nome": "Wagner Santana",
   "cpf": "123.456.789-00",
@@ -130,3 +136,108 @@ Desenvolvido por **Wagner Santana**.
   "medicamentos": [],
   "observacoes": "Paciente relata ansiedade leve."
 }
+```
+
+### Prontuários
+
+* `POST /prontuarios/` – Criar prontuário (sessão) para paciente
+* `GET /prontuarios/` – Listar prontuários
+* `GET /prontuarios/{id}` – Obter prontuário por ID
+* `PUT /prontuarios/{id}` – Atualizar prontuário
+* `DELETE /prontuarios/{id}` – Remover prontuário
+
+### Sessões
+
+* `POST /sessoes/` – Criar sessão
+* `GET /sessoes/` – Listar sessões
+* `GET /sessoes/{id}` – Obter sessão por ID
+
+### Evoluções
+
+* `POST /evolucoes/` – Registrar evolução
+* `GET /evolucoes/` – Listar evoluções
+* `GET /evolucoes/{id}` – Obter evolução por ID
+
+### Documentos
+
+* `POST /documentos/` – Adicionar documento
+* `GET /documentos/` – Listar documentos
+* `GET /documentos/{id}` – Obter documento por ID
+
+### Usuários & Auth
+
+* `POST /usuarios/` – Criar novo usuário (ex.: psicólogo/admin)
+* `POST /auth/login` – Login (retorna **JWT**)
+* `GET /usuarios/me` – Dados do usuário autenticado (**Bearer Token**)
+
+---
+
+## 🧪 Exemplos rápidos (cURL)
+
+```bash
+# Criar paciente
+curl -X POST http://127.0.0.1:8000/api/v1/pacientes/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome":"Wagner Santana",
+    "cpf":"123.456.789-00",
+    "rg":"MG-12.345.678",
+    "data_nascimento":"1985-08-27",
+    "genero":"Masculino",
+    "email":"wagner.santana@example.com",
+    "telefone":"(31) 99999-0000",
+    "endereco":"Rua Exemplo, 123, BH",
+    "contato_emergencia":"Maria Santana - (31) 98888-0000",
+    "plano_saude":"Unimed",
+    "numero_carteirinha":"000123456",
+    "historico_atendimentos":[],
+    "diagnosticos":["Ansiedade leve"],
+    "medicamentos":[],
+    "observacoes":"Paciente relata ansiedade leve."
+  }'
+
+# Listar pacientes
+curl http://127.0.0.1:8000/api/v1/pacientes/
+
+# Login (exemplo)
+curl -X POST http://127.0.0.1:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"demo","password":"demo"}'
+
+# Rota protegida (substitua TOKEN pelo JWT)
+curl http://127.0.0.1:8000/api/v1/usuarios/me \
+  -H "Authorization: Bearer TOKEN"
+```
+
+---
+
+## ✅ Testes
+
+Se houver testes automatizados (pasta `testes/`), execute:
+
+```bash
+pytest -q
+```
+
+> Garanta que o ambiente esteja ativo e dependências instaladas.
+
+---
+
+
+## 🤝 Contribuição
+
+1. Faça um **fork**
+2. Crie uma branch: `git checkout -b minha-melhoria`
+3. Commit: `git commit -m 'feat: nova funcionalidade'`
+4. Push: `git push origin minha-melhoria`
+5. Abra um **Pull Request**
+
+---
+
+## ⚖️ Licença
+
+Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE).
+
+---
+
+Desenvolvido por **Wagner Santana**.
