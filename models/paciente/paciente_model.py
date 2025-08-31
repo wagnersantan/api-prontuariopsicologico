@@ -1,6 +1,9 @@
+# models/paciente.py
 from sqlalchemy import Column, Integer, String, Text, Date
+from sqlalchemy.orm import relationship
 from core.database import Base
 import json
+from datetime import date
 
 class Paciente(Base):
     __tablename__ = "pacientes"
@@ -8,11 +11,12 @@ class Paciente(Base):
     # Identificação básica
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
-    cpf = Column(String, unique=True, index=True, nullable=True)  # identificação oficial
+    cpf = Column(String, unique=True, index=True, nullable=True)
     rg = Column(String, nullable=True)
 
     # Dados pessoais
-    data_nascimento = Column(Date, nullable=True)  # use ISO format no Pydantic
+    data_nascimento = Column(Date, nullable=True)
+    idade = Column(Integer, nullable=True)  # <-- nova coluna
     genero = Column(String, nullable=True)
 
     # Contato
@@ -31,7 +35,10 @@ class Paciente(Base):
     medicamentos = Column(Text, nullable=True)
     observacoes = Column(Text, nullable=True)
 
-    # Métodos auxiliares para converter listas para JSON ao salvar
+    # Relacionamento com Prontuarios
+    prontuarios = relationship("Prontuario", back_populates="paciente")
+
+    # Métodos auxiliares para converter listas para JSON
     def set_historico_atendimentos(self, lista):
         self.historico_atendimentos = json.dumps(lista)
 
@@ -55,3 +62,12 @@ class Paciente(Base):
         if self.medicamentos:
             return json.loads(self.medicamentos)
         return []
+
+    # Método opcional para calcular idade a partir da data de nascimento
+    def calcular_idade(self):
+        if self.data_nascimento:
+            today = date.today()
+            return today.year - self.data_nascimento.year - (
+                (today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day)
+            )
+        return None

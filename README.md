@@ -196,6 +196,33 @@ curl -X POST http://127.0.0.1:8000/api/v1/pacientes/ \
     "observacoes":"Paciente relata ansiedade leve."
   }'
 
+  {
+  "nome": "Mauricio Fernandes",
+  "cpf": "987.654.321-00",
+  "rg": "12.345.678-9",
+  "data_nascimento": "1983-04-15",
+  "idade": 42,
+  "genero": "masculino",
+  "email": "mauricio.fernandes@example.com",
+  "telefone": "(11) 91234-5678",
+  "endereco": "Rua das Flores, 123, São Paulo, SP",
+  "contato_emergencia": "(11) 99876-5432 - Joana Fernandes",
+  "plano_saude": "Unimed",
+  "numero_carteirinha": "UN123456789",
+  "historico_atendimentos": [
+    "Consulta inicial - 10/01/2025",
+    "Retorno - 24/01/2025"
+  ],
+  "diagnosticos": [
+    "Ansiedade leve"
+  ],
+  "medicamentos": [
+    "Sertralina 50mg - 1x ao dia"
+  ],
+  "observacoes": "Paciente relatou melhora nos sintomas após acompanhamento psicológico. Orientado a manter hábitos saudáveis e praticar exercícios de respiração."
+}
+
+
 # Listar pacientes
 curl http://127.0.0.1:8000/api/v1/pacientes/
 
